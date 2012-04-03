@@ -8,12 +8,12 @@ require 'mite/version.rb'
 module Mite
   
   class << self
-    attr_accessor :email, :password, :domain_format, :protocol, :port, :user_agent
-    attr_reader :account, :key
+    attr_accessor :email, :password, :domain_format, :port
+    attr_reader :account, :key, :protocol, :user_agent
 
     # Sets the account name, and updates all resources with the new domain.
     def account=(name)
-      Mite::Base.site = "#{protocol}://#{domain_format % name}#{port.blank? ? '' : ":#{port}"}"
+      Mite::Base.site = "https://#{domain_format % name}#{port.blank? ? '' : ":#{port}"}"
       @account = name
     end
 
@@ -43,6 +43,10 @@ module Mite
       end
       @user_agent = user_agent
     end
+    
+    def protocol=(protocol)
+      $stderr.puts "WARNING: mite.api can only be accessed over HTTPS." unless protocol == 'https'
+    end
 
     def resources
       @resources ||= []
@@ -66,7 +70,6 @@ module Mite
   end
   
   self.domain_format = '%s.mite.yo.lk'
-  self.protocol      = 'https'
   self.port          = ''
   self.user_agent    = "mite-rb/#{Mite::VERSION}"
   
@@ -172,5 +175,12 @@ module Mite
   
 end
 
-$:.unshift(File.dirname(__FILE__))
-Dir[File.join(File.dirname(__FILE__), "mite/*.rb")].each { |f| require f }
+require 'mite/account'
+require 'mite/customer'
+require 'mite/myself'
+require 'mite/project'
+require 'mite/service'
+require 'mite/time_entry'
+require 'mite/time_entry_group'
+require 'mite/tracker'
+require 'mite/user'
