@@ -48,6 +48,12 @@ class Mite::TimeEntry < Mite::Base
   def date_at
     Date.parse(attributes["date_at"])
   end
+  def updated_at
+    Date.parse(attributes["updated_at"])
+  end
+  def created_at
+    Date.parse(attributes["created_at"])
+  end
 
   class << self
     def find_every(options={})
